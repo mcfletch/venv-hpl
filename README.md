@@ -25,10 +25,25 @@ Or clone the repo:
     $ git clone https://github.com/mcfletch/venvhpl.git
     $ python setup.py install
 
-Linking a package from the host python
+Linking a package from the host python into your current virtualenv:
 
     $ source path/to/myenv/bin/activate
     (myenv) $ venv-hpl gi
+
+Loading the `gi` module from a module such that if the initial
+gi import fails we shell out to run `venv-hpl` then re-import:
+
+    try:
+        import gi
+    except ImportError:
+        try:
+            import subprocess
+
+            subprocess.check_call(['venv-hpl', 'gi'])
+        except subprocess.CalledProcessError:
+            raise ImportError("gi")
+        else:
+            import gi
     
 Contributing
 ------------
